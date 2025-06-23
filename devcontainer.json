@@ -154,6 +154,9 @@
 	"initializeCommand": "echo 'Initializing DevContainer...'",
 	"onCreateCommand": {
 		"setup-environment": "bash .devcontainer/fix-permissions.sh",
+		"copy-mcp-config": "cp .devcontainer/.mcp.json ../ || echo '.mcp.json not found'",
+		"copy-env-config": "cp .devcontainer/.env.example ../.env || echo '.env.example not found'",
+		"copy-claude-config": "cp -r .devcontainer/.claude ../ || echo '.claude not found'",
 		"install-deps": "npm install",
 		"install-claude": "npm install -g @anthropic-ai/claude-code@latest",
 		"verify-tools": "source ~/.bashrc && echo 'Tools verification:' && which uv && uv --version && which claude && claude --version || echo 'Tools installation pending...'"
