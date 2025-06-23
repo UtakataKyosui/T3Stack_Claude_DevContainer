@@ -1,0 +1,178 @@
+{
+	"name": "HukuLog T3 Stack Development Environment",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"shutdownAction": "stopCompose",
+	"overrideCommand": false,
+	"remoteUser": "node",
+	"containerUser": "node",
+
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/git:1": {
+			"ppa": true,
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.12"
+		}
+	},
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"biomejs.biome",
+				"bradlc.vscode-tailwindcss",
+				"ms-vscode.vscode-typescript-next",
+				"formulahendry.auto-rename-tag",
+				"christian-kohler.path-intellisense",
+				"christian-kohler.npm-intellisense",
+				"ms-azuretools.vscode-docker",
+				"humao.rest-client",
+				"eamodio.gitlens",
+				"usernamehw.errorlens",
+				"PKief.material-icon-theme",
+				"GitHub.github-vscode-theme",
+				"mikestead.dotenv",
+				"ms-playwright.playwright",
+				"YoavBls.pretty-ts-errors",
+				"dsznajder.es7-react-js-snippets",
+				"mechatroner.rainbow-csv",
+				"redhat.vscode-yaml",
+				"ms-vscode.vscode-json"
+			],
+
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "bash",
+				"typescript.preferences.preferTypeOnlyAutoImports": true,
+				"typescript.preferences.includePackageJsonAutoImports": "auto",
+				"typescript.updateImportsOnFileMove.enabled": "always",
+				"typescript.preferences.importModuleSpecifier": "relative",
+
+				"editor.formatOnSave": true,
+				"editor.defaultFormatter": "biomejs.biome",
+				"editor.codeActionsOnSave": {
+					"source.fixAll.biome": "explicit",
+					"source.organizeImports.biome": "explicit"
+				},
+				"editor.fontFamily": "'Fira Code', 'Cascadia Code', Consolas, 'Courier New', monospace",
+				"editor.fontLigatures": true,
+				"editor.minimap.enabled": false,
+				"editor.wordWrap": "on",
+				"editor.rulers": [80, 120],
+				"editor.inlayHints.enabled": "on",
+
+				"files.associations": {
+					"*.css": "tailwindcss",
+					"*.mdx": "markdown"
+				},
+				"files.exclude": {
+					"**/.next": true,
+					"**/node_modules": true,
+					"**/.git": true,
+					"**/.DS_Store": true,
+					"**/.next-env.d.ts": true
+				},
+				"search.exclude": {
+					"**/node_modules": true,
+					"**/.next": true,
+					"**/.vercel": true,
+					"**/dist": true,
+					"**/out": true
+				},
+
+				"emmet.includeLanguages": {
+					"javascript": "javascriptreact",
+					"typescript": "typescriptreact"
+				},
+				"emmet.triggerExpansionOnTab": true,
+
+				"tailwindCSS.experimental.classRegex": [
+					["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+					["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+					["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+				],
+				"tailwindCSS.includeLanguages": {
+					"typescript": "javascript",
+					"typescriptreact": "javascriptreact"
+				},
+
+				"git.autofetch": true,
+				"git.enableSmartCommit": true,
+				"git.confirmSync": false,
+
+				"json.schemas": [
+					{
+						"fileMatch": ["tsconfig.json", "tsconfig.*.json"],
+						"url": "https://json.schemastore.org/tsconfig"
+					},
+					{
+						"fileMatch": ["package.json"],
+						"url": "https://json.schemastore.org/package"
+					}
+				],
+
+				"workbench.colorTheme": "GitHub Dark",
+				"workbench.iconTheme": "material-icon-theme",
+				"workbench.editor.enablePreview": false,
+				"workbench.editor.closeEmptyGroups": false
+			}
+		}
+	},
+
+	"forwardPorts": [3000, 5432, 6379, 8080, 8025, 1025],
+
+	"portsAttributes": {
+		"3000": {
+			"label": "Next.js App",
+			"onAutoForward": "notify"
+		},
+		"5432": {
+			"label": "PostgreSQL Database",
+			"onAutoForward": "silent"
+		},
+		"6379": {
+			"label": "Redis Cache",
+			"onAutoForward": "silent"
+		},
+		"8080": {
+			"label": "Adminer (DB Admin)",
+			"onAutoForward": "silent"
+		},
+		"8025": {
+			"label": "MailHog Web UI",
+			"onAutoForward": "silent"
+		},
+		"1025": {
+			"label": "MailHog SMTP",
+			"onAutoForward": "silent"
+		}
+	},
+
+	"initializeCommand": "echo 'Initializing DevContainer...'",
+	"onCreateCommand": {
+		"setup-environment": "bash .devcontainer/fix-permissions.sh",
+		"install-deps": "npm install",
+		"install-claude": "npm install -g @anthropic-ai/claude-code@latest",
+		"verify-tools": "source ~/.bashrc && echo 'Tools verification:' && which uv && uv --version && which claude && claude --version || echo 'Tools installation pending...'"
+	},
+	"postCreateCommand": "npm run db:push && npm run db:seed && npm run setup:claude && npm run setup:devtools",
+	"postStartCommand": "echo 'DevContainer started successfully'",
+	"postAttachCommand": "cd /workspace && pwd && ls -la && echo 'Welcome to HukuLog DevContainer!' && echo 'Claude Code status:' && which claude && claude --version || echo 'Claude Code not found - trying npm install'",
+
+	"lifecycle": {
+		"postStopCommand": "docker-compose -f .devcontainer/docker-compose.yml down --remove-orphans --volumes"
+	},
+
+	"remoteEnv": {
+		"NODE_ENV": "development",
+		"DATABASE_URL": "postgresql://postgres:password@postgres:5432/hukulog",
+		"REDIS_URL": "redis://redis:6379",
+		"BETTER_AUTH_SECRET": "development-secret-key",
+		"BETTER_AUTH_URL": "http://localhost:3000",
+		"PATH": "${containerEnv:PATH}:/home/node/.cargo/bin:/home/node/.local/bin",
+		"ANTHROPIC_CONFIG_DIR": "/home/node/.anthropic"
+	}
+}
