@@ -5,7 +5,7 @@ services:
   app:
     image: mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
     volumes:
-      - ../:/workspace:cached
+      - ../:/workspace
       - node_modules:/workspace/node_modules:rw
       - /var/run/docker.sock:/var/run/docker-host.sock
       - ~/.anthropic:/home/node/.anthropic:cached
