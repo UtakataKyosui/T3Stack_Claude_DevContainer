@@ -2,7 +2,7 @@
 	"mcpServers": {
 		"file-system": {
 			"command": "npx",
-			"args": ["-y", "@modelcontextprotocol/server-filesystem", "~/Documents"]
+			"args": ["-y", "@modelcontextprotocol/server-filesystem", "/app"]
 		},
 		"github": {
 			"command": "npx",
