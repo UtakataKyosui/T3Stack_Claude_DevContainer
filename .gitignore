@@ -1,0 +1,21 @@
+# Environment variables
+.env
+.env.local
+.env.production
+.env.staging
+
+# Local development files
+.claude/settings.local.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/settings.json
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+*.log

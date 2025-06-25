@@ -82,19 +82,38 @@ git clone https://github.com/UtakataKyosui/T3Stack_Claude_DevContainer.git .devc
 | PostgreSQL | localhost:5432 | postgres/password |
 | Redis | localhost:6379 | - |
 
-## 環境変数
+## 環境変数設定
 
-`.env`ファイルで以下の環境変数を設定できます：
+**重要**: 初回セットアップ時に環境変数の設定が必要です。
+
+### 設定手順
+
+1. `.env.example`をコピーして`.env`を作成：
+```bash
+cp .env.example .env
+```
+
+2. 必要に応じて値を変更（基本的には開発用のデフォルト値で動作します）
+
+### 主要な環境変数
 
 ```bash
-# Database
-DATABASE_URL=postgresql://postgres:password@postgres:5432/hukulog
-REDIS_URL=redis://redis:6379
+# Database (DevContainer用 - サービス名を使用)
+DATABASE_URL="postgresql://postgres:password@postgres:5432/t3stack"
 
-# Authentication
-BETTER_AUTH_SECRET=development-secret-key
-BETTER_AUTH_URL=http://localhost:3000
+# Better Auth (開発用)
+BETTER_AUTH_SECRET="development-secret-key-change-in-production"
+BETTER_AUTH_URL="http://localhost:3000"
+
+# Redis (セッション管理用)
+REDIS_URL="redis://redis:6379"
 ```
+
+### セキュリティ注意事項
+
+- `.env`ファイルは`.gitignore`により除外されています
+- 本番環境では必ず適切な秘密鍵を設定してください
+- OAuth設定が必要な場合は、各プロバイダーから取得した値を設定してください
 
 ## トラブルシューティング
 
